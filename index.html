@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Offline System Map</title>
+	<link rel="stylesheet" href="https://osm.gteh.top/v1/index.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+TC">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+JP">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+KR">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<script src="https://osm.gteh.top/v1/fabric.min.js"></script>
+	<script src="https://osm.gteh.top/v1/fontfaceobserver.standalone.js"></script>
+	<script type="module" src="https://osm.gteh.top/v1/index.js"></script>
+	<script type="module" src="https://osm.gteh.top/v1/drawing.js"></script>
+	<script type="module" src="https://osm.gteh.top/v1/data.js"></script>
+	<script type="module" src="https://osm.gteh.top/v1/document.js"></script>
+	<script type="module" src="https://osm.gteh.top/v1/actions.js"></script>
+	<script type="module" src="https://osm.gteh.top/v1/settings.js"></script>
+	<script type="module" src="https://osm.gteh.top/v1/utilities.js"></script>
+	<script type="module" src="https://osm.gteh.top/v1/fetch.js"></script>
+	<script type="module" src="https://osm.gteh.top/v1/version.js"></script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="loading" class="material-icons large">refresh</div>
+<div id="warn">
+	<p>Offline System Map updates could be delayed. Actual conditions may vary.</p>
+</div>
+<div id="search" class="box" style="margin: 28px 1em;">
+	<div class="search_top">
+		<span class="material-icons">search</span>
+		<label for="search_box">Search</label>
+		<input id="search_box" class="text text_box" type="text" placeholder="Search station / route"/>
+		<span id="clear_search_icon" class="material-icons clickable right_align" style="display: none">clear</span>
+		<span id="settings_icon" class="material-icons clickable right_align">settings</span>
+	</div>
+	<div id="search_results_stations" class="search_results"></div>
+	<div id="search_results_routes" class="search_results"></div>
+	<div id="station_info" class="search_results" style="display: none">
+		<div class="info_top">
+			<span class="material-icons right_align" style="opacity: 0">clear</span>
+			<div id="station_name" class="info_name text"></div>
+			<span id="clear_station_info_button" class="material-icons clickable right_align">clear</span>
+		</div>
+		<div class="info_middle">
+			<span class="material-icons small">my_location</span>
+			<span id="station_coordinates" class="text"></span>
+			&nbsp;&nbsp;&nbsp;
+			<span class="material-icons small">sell</span>
+			<span id="station_zone" class="text"></span>
+		</div>
+		<div class="info_middle">
+			<span id="station_copy" class="material-icons clickable" title="Copy Location">content_copy</span>
+		</div>
+		<div id="station_line" class="info_line"></div>
+		<div id="station_routes"></div>
+	</div>
+	<div id="route_info" class="search_results" style="display: none">
+		<div class="info_top">
+			<span class="material-icons right_align" style="opacity: 0">clear</span>
+			<div id="route_name" class="info_name text"></div>
+			<span id="clear_route_info_button" class="material-icons clickable right_align">clear</span>
+		</div>
+		<div class="info_middle">
+			<span id="route_stations_tab" class="material-icons clickable">commit</span>
+		</div>
+		<div id="route_line" class="info_line"></div>
+		<div id="route_details" class="text"></div>
+	</div>
+	<div id="settings" class="search_results" style="display: none">
+		<div id="settings_route_types" style="display: none">
+			<div class="spacer"></div>
+			<div>
+				<span id="settings_route_type_train_normal" class="material-icons clickable" title="Heavy Rail">directions_train</span>
+				<span id="settings_route_type_train_light_rail" class="material-icons clickable" title="Light Rail">tram</span>
+				<span id="settings_route_type_train_high_speed" class="material-icons clickable" title="HSR">train</span>
+				<span id="settings_route_type_boat_normal" class="material-icons clickable" title="Ferry">sailing</span>
+				<span id="settings_route_type_boat_light_rail" class="material-icons clickable" title="Fast Ferry">directions_boat</span>
+				<span id="settings_route_type_boat_high_speed" class="material-icons clickable" title="Cruise">snowmobile</span>
+				<span id="settings_route_type_cable_car_normal" class="material-icons clickable" title="Cable Car">airline_seat_recline_extra</span>
+				<span id="settings_route_type_airplane_normal" class="material-icons clickable" title="Airplane">flight</span>
+				<span id="settings_route_type_bus_normal" class="material-icons clickable" title="Bus">directions_bus</span>
+				<span id="settings_route_type_bus_light_rail" class="material-icons clickable" title="Local Taxi">local_taxi</span>
+				<span id="settings_route_type_bus_high_speed" class="material-icons clickable" title="BRT">airport_shuttle</span>
+			</div>
+		</div>
+		<div id="settings_dimensions">
+			<div class="spacer"></div>
+			<div id="settings_dimensions_buttons"></div>
+		</div>
+		<div>
+			<div class="spacer"></div>
+			<div>
+				<span id="zoom_in_icon" class="material-icons clickable " title="Zoom In">zoom_in</span>
+				<span id="zoom_out_icon" class="material-icons clickable " title="Zoom Out">zoom_out</span>
+				<span id="text_zoom_in_icon" class="material-icons clickable " title="Larger Font">text_increase</span>
+				<span id="text_zoom_out_icon" class="material-icons clickable " title="Smaller Font">text_decrease</span>
+				<span id="toggle_text_icon" class="material-icons clickable " title="Hide/Show Text">font_download_off</span>
+				<span id="toggle_legend_icon" class="material-icons clickable " title="Toggle Legend Icon">playlist_remove</span>
+				<span id="toggle_theme_icon" class="material-icons clickable " title="Toggle Dark Mode"></span>
+				<a href="zh-Hans"><span class="material-icons clickable" title="Browse Simplified Chinese Version">translate</span></a>
+			</div>
+		</div>
+		<div>
+			<div class="spacer"></div>
+			<div id="player_list"></div>
+			<div class="version">OSM v1.0.0, 250801</div>
+			<div id="version" class="version"></div>
+		</div>
+	</div>
+</div>
+<div id="legend" class="box" style="display: none">
+</div>
+</body>
+</html>
