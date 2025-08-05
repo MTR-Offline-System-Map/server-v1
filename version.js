@@ -1,1 +1,0 @@
-const VERSION="Offline System Map v1, 250801";export default VERSION;
