@@ -18,3 +18,5 @@ Languages: English, 简体中文 (Simplified Chinese)
 [Cloudflare Pages demo](//mtr-osm-v1.pages.dev)
 
 [Vercel demo](//mtr-osm-v1.vercel.app)
+
+[GitHub Pages demo](//offline-system-map.github.io/server-v1/)

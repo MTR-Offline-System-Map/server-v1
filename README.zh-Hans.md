@@ -18,3 +18,5 @@
 [Cloudflare Pages demo](//mtr-osm-v1.pages.dev/zh-Hans)
 
 [Vercel demo](//mtr-osm-v1.vercel.app/zh-Hans)
+
+[GitHub Pages demo](//offline-system-map.github.io/server-v1/)
