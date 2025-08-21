@@ -19,4 +19,4 @@
 
 [Vercel demo](//mtr-osm-v1.vercel.app/zh-Hans)
 
-[GitHub Pages demo](//offline-system-map.github.io/server-v1/)
+[GitHub Pages demo](//mtr-offline-system-map.github.io/server-v1/)

@@ -19,4 +19,4 @@ Languages: English, 简体中文 (Simplified Chinese)
 
 [Vercel demo](//mtr-osm-v1.vercel.app)
 
-[GitHub Pages demo](//offline-system-map.github.io/server-v1/)
+[GitHub Pages demo](//mtr-offline-system-map.github.io/server-v1/)
